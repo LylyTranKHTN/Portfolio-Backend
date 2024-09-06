@@ -5,6 +5,9 @@
  */
 
 import app from './app';
+import pg from 'pg';
+import db from './models';
+
 const debug = require('debug')('node-js-get-start:server');
 const http = require('http');
 
@@ -25,7 +28,10 @@ const server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port, () => {console.log('Listening on: http://localhost:3000')});
+db.sequelize.sync().then(() => {
+  server.listen(port, () => {console.log('Listening on: http://localhost:3000')});
+})
+
 server.on('error', onError);
 server.on('listening', onListening);
 
