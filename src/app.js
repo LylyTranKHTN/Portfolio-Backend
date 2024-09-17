@@ -8,10 +8,6 @@ import logger from 'morgan';
 import indexRouter from './routes/index';
 import usersRouter from './routes/users';
 
-import sequelize from './models';
-import pg from 'pg';
-import db from './models';
-
 const app = express();
 
 dotenv.config();
@@ -44,6 +40,8 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+
 
 
 export default app;

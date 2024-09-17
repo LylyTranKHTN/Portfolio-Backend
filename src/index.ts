@@ -5,7 +5,6 @@
  */
 
 import app from './app';
-import pg from 'pg';
 import db from './models';
 
 const debug = require('debug')('node-js-get-start:server');
