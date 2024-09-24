@@ -1,21 +1,21 @@
-import { User } from "./user.js";
+import { User } from './user.js'
 
 // A post request should not contain an id.
-export type UserCreationParams = Omit<User, "id">;
+export type UserCreationParams = Omit<User, 'id'>
 
 export class UsersService {
   public get(id: number, name?: string): User {
     return {
       id,
-      firstName: name ?? "Lily",
-      lastName: "Tran",
-    };
+      firstName: name ?? 'Lily',
+      lastName: 'Tran',
+    }
   }
 
   public create(userCreationParams: UserCreationParams): User {
     return {
       id: Math.floor(Math.random() * 10000), // Random
       ...userCreationParams,
-    };
+    }
   }
 }
