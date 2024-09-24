@@ -11,8 +11,8 @@ import logger from 'morgan';
 
 import { ValidateError } from "tsoa";
 
-import { swaggerUi, specs } from './swaggerConfig';
-import { RegisterRoutes } from "../dist/routes";
+import { swaggerUi, specs } from './swaggerConfig.js';
+import { RegisterRoutes } from "../dist/routes.js";
 export const app = express();
 
 dotenv.config();

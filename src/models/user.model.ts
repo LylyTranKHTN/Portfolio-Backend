@@ -1,5 +1,4 @@
 import {
-  Sequelize,
   DataTypes,
   Model,
   InferAttributes,
@@ -7,10 +6,6 @@ import {
   CreationOptional,
 } from '@sequelize/core';
 import { Attribute, PrimaryKey, AutoIncrement, NotNull } from '@sequelize/core/decorators-legacy';
-import { PostgresDialect } from '@sequelize/postgres';
-
-const sequelize = new Sequelize({ dialect: PostgresDialect });
-
 export class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   @Attribute(DataTypes.INTEGER)
   @PrimaryKey

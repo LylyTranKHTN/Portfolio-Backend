@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 import {app} from './app.js';
-import sequelize from './models/index.mjs';
+import sequelize from './models/index.js';
 
 const port = normalizePort(process.env.PORT ?? '3000');
 

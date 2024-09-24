@@ -5,7 +5,6 @@ import { dirname } from 'node:path';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-
 const sequelizeConfig = {
   dialect: PostgresDialect,
   user: "postgres",

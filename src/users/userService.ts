@@ -1,4 +1,4 @@
-import { User } from "./user";
+import { User } from "./user.js";
 
 // A post request should not contain an id.
 export type UserCreationParams = Omit<User, "id">;
