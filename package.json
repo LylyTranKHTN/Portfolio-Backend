@@ -4,12 +4,16 @@
   "private": true,
   "type": "module",
   "main": "dist/src/server.js",
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown"
+  },
   "scripts": {
     "build": "tsoa spec-and-routes && tsc",
     "start": "node dist/src/server.mjs",
     "dev": "concurrently \"nodemon\" \"nodemon -x tsoa spec-and-routes\"",
     "migrate": "npx sequelize-cli db:migrate",
-    "migrate:undo": "npx sequelize-cli db:migrate:undo"
+    "migrate:undo": "npx sequelize-cli db:migrate:undo",
+    "prepare": "husky"
   },
   "dependencies": {
     "@sequelize/core": "^7.0.0-alpha.41",
@@ -39,6 +43,8 @@
     "concurrently": "^9.0.1",
     "eslint": "^9.11.1",
     "globals": "^15.9.0",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
     "nodemon": "^3.1.4",
     "prettier": "3.3.3",
     "sequelize-cli": "^6.6.2",
