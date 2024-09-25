@@ -21,7 +21,7 @@ sequelize.sync().then(() => {
 /**
  * Normalize a port into a number, string, or false.
  */
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function normalizePort(val: any) {
   const port = parseInt(val, 10)
 

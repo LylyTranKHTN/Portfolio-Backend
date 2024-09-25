@@ -11,7 +11,7 @@ import logger from 'morgan'
 
 import { ValidateError } from 'tsoa'
 
-import { swaggerUi, specs } from './swaggerConfig.js'
+// import { swaggerUi, specs } from './swaggerConfig.js'
 import { RegisterRoutes } from '../dist/routes.js'
 export const app = express()
 
@@ -28,7 +28,7 @@ app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 
 // swagger docs
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs))
+// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs))
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -37,7 +37,7 @@ app.use(function (req, res, next) {
 
 // error handler
 app.use(function (
-  err: any,
+  err: any, // eslint-disable-line @typescript-eslint/no-explicit-any
   req: ExRequest,
   res: ExResponse,
   next: NextFunction,
