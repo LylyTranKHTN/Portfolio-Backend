@@ -1,5 +1,8 @@
 {
-  "exec": "ts-node src/server.mts",
+  "exec": "ts-node-esm src/server.js",
+  "execMap": {
+    "ts": "node --loader ts-node/esm"
+  },
   "watch": ["src"],
-  "ext": "mts"
+  "ext": "ts"
 }
