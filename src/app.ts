@@ -1,33 +1,25 @@
-import createError from 'http-errors'
 import express, {
   Response as ExResponse,
   Request as ExRequest,
   NextFunction,
 } from 'express'
 import dotenv from 'dotenv'
-import path from 'path'
 import cookieParser from 'cookie-parser'
-import logger from 'morgan'
 import { ValidateError } from 'tsoa'
 import swaggerUi from 'swagger-ui-express'
 import { RegisterRoutes } from '../dist/routes.js'
 import { createRequire } from 'node:module'
-import { fileURLToPath } from 'node:url'
-import { dirname } from 'node:path'
 
 const require = createRequire(import.meta.url)
 const swaggerJson = require('../dist/swagger.json')
-const __dirname = dirname(fileURLToPath(import.meta.url))
 
 export const app = express()
 
 dotenv.config()
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'))
-app.set('view engine', 'pug')
 
-app.use(logger('dev'))
+// app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
@@ -37,22 +29,23 @@ app.use('/docs', swaggerUi.serve, async (_req: ExRequest, res: ExResponse) => {
   return res.send(swaggerUi.generateHTML(swaggerJson))
 })
 
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  next(createError(404))
+RegisterRoutes(app)
+
+// handle missing routes
+app.use(function notFoundHandler(_req, res: ExResponse) {
+  res.status(404).send({
+    message: 'Not Found',
+  })
 })
 
 // error handler
 app.use(function (
-  err: any, // eslint-disable-line @typescript-eslint/no-explicit-any
+  err: unknown, // eslint-disable-line @typescript-eslint/no-explicit-any
   req: ExRequest,
   res: ExResponse,
   next: NextFunction,
 ) {
-  // set locals, only providing error in development
-  res.locals.message = err?.message ?? 'Internal Server Error'
-  res.locals.error = req.app.get('env') === 'development' ? err : {}
-
+  // handle validation errors
   if (err instanceof ValidateError) {
     console.warn(`Caught Validation Error for ${req.path}:`, err.fields)
     return res.status(422).json({
@@ -60,6 +53,7 @@ app.use(function (
       details: err?.fields,
     })
   }
+
   if (err instanceof Error) {
     return res.status(500).json({
       message: 'Internal Server Error',
@@ -68,5 +62,3 @@ app.use(function (
 
   next()
 })
-
-RegisterRoutes(app)

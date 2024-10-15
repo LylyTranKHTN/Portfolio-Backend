@@ -6,7 +6,12 @@ import {
   CreationOptional,
   sql,
 } from '@sequelize/core'
-import { NotNull, Attribute, Default } from '@sequelize/core/decorators-legacy'
+import {
+  NotNull,
+  Attribute,
+  Default,
+  DeletedAt,
+} from '@sequelize/core/decorators-legacy'
 
 export class Theme extends Model<
   InferAttributes<Theme>,
@@ -38,4 +43,7 @@ export class Theme extends Model<
   @Attribute(DataTypes.DATE)
   @Default(sql.literal('CURRENT_TIMESTAMP'))
   declare updatedAt: CreationOptional<Date>
+
+  @DeletedAt
+  declare deletedAt: Date | null
 }
