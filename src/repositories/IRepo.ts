@@ -1,7 +1,11 @@
-interface Repo<T> {
-  exists(id: string): Promise<boolean>
-  delete(t: T): Promise<any>
-  save(t: T): Promise<any>
+export interface IRepoRead {
+  exists(id: string): Promise<boolean>;
+  get(id: string): Promise<any>;
 }
 
-export default Repo
+interface IRepo<T> extends IRepoRead {
+  delete(t: T): Promise<any>;
+  save(t: T): Promise<any>;
+}
+
+export default IRepo;

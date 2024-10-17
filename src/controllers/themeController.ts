@@ -1,27 +1,64 @@
-import { Body, Controller, Get, Post, SuccessResponse } from 'tsoa'
-import { ThemeDTO } from '../dtos/themeDto.js'
-import { ThemeCreationParams, ThemeService } from '../services/themeService.js'
+import {
+  Body,
+  Controller,
+  Example,
+  Get,
+  Post,
+  Put,
+  Response,
+  Route,
+  SuccessResponse,
+} from 'tsoa';
+import { ThemeDTO } from '../dtos/themeDto.js';
+import { ThemeService } from '../services/themeService.js';
 
-export class ThemeController extends Controller {
-  private themeService: ThemeService
+@Route('themes')
+export class ThemesController extends Controller {
+  private themeService: ThemeService;
 
   constructor() {
-    super()
-    this.themeService = new ThemeService()
+    super();
+    this.themeService = new ThemeService();
+  }
+
+  @Get('latest')
+  @Response('404', 'Not Found')
+  public async getLatestTheme(): Promise<ThemeDTO> {
+    return this.themeService.getLastest();
+  }
+
+  @Response('404', 'Not Found') // Custom error response
+  @SuccessResponse('201', 'Created')
+  @Example<Omit<ThemeDTO, 'id'>>({
+    name: 'secondary-color',
+    title: 'Secondary Color',
+    value: 'black',
+    description: 'This is Secondary color',
+  })
+  @Post()
+  public async createTheme(
+    @Body() requestBody: Omit<ThemeDTO, 'id'>,
+  ): Promise<ThemeDTO> {
+    this.setStatus(201); // set return status 201
+    return this.themeService.create(requestBody);
   }
 
   @Get()
-  public async getLatestTheme(): Promise<ThemeDTO> {
-    return this.themeService.getLastest()
+  public async getAll(): Promise<ThemeDTO[]> {
+    return this.themeService.getAll();
   }
 
-  @SuccessResponse('201', 'Created') // Custom success response
-  @Post()
-  public async createTheme(
-    @Body() requestBody: ThemeCreationParams,
-  ): Promise<void> {
-    this.setStatus(201) // set return status 201
-    this.themeService.create(requestBody)
-    return
+  @Put('{themeId}')
+  @Example<Omit<ThemeDTO, 'id'>>({
+    name: 'secondary-color',
+    title: 'Secondary Color',
+    value: 'black',
+    description: 'This is Secondary color',
+  })
+  public async updateTheme(
+    themeId: string,
+    @Body() requestBody: Omit<ThemeDTO, 'id'>,
+  ): Promise<ThemeDTO> {
+    return this.themeService.update(themeId, requestBody);
   }
 }
