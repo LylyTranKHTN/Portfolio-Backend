@@ -2,14 +2,14 @@
 import { app } from './app.js';
 import sequelize from './models/index.js';
 
-const port = normalizePort(process.env.PORT ?? '3000');
+const port = normalizePort(process.env.PORT ?? '3002');
 
 /**
  * Listen on provided port, on all network interfaces.
  */
 sequelize.sync({ alter: true }).then(() => {
   app.listen(port, () => {
-    console.log('Listening on: http://localhost:3000');
+    console.log('Listening on: http://localhost:3002');
   });
 });
 

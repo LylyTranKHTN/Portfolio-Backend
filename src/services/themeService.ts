@@ -1,4 +1,4 @@
-import { ThemeDTO } from '../dtos/themeDto.js';
+import { ThemeDTO, ThemeUpdateParams } from '../dtos/themeDto.js';
 import ThemeMap from '../mappers/ThemeMap.js';
 import { Theme } from '../models/theme.model.js';
 import { IThemeRepo } from '../repositories/IThemeRepo.js';
@@ -21,12 +21,7 @@ export class ThemeService {
       throw new Error('Theme not found');
     }
 
-    return {
-      id: theme.id,
-      name: theme.name,
-      title: theme.title,
-      value: theme.value,
-    };
+    return ThemeMap.toDTO(theme);
   }
 
   public async create(
@@ -38,7 +33,6 @@ export class ThemeService {
       );
       return newTheme;
     } catch (error) {
-      console.error(error);
       throw new Error('Failed to save theme');
     }
   }
@@ -61,5 +55,12 @@ export class ThemeService {
     });
 
     return updatedTheme;
+  }
+
+  public async updateAll(
+    themeUpdateParams: ThemeUpdateParams[],
+  ): Promise<ThemeDTO[]> {
+    const updatedList = await this.themeRepo.updateAll(themeUpdateParams);
+    return updatedList.map((theme) => ThemeMap.toDTO(theme));
   }
 }

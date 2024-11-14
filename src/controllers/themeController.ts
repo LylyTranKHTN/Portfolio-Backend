@@ -9,7 +9,7 @@ import {
   Route,
   SuccessResponse,
 } from 'tsoa';
-import { ThemeDTO } from '../dtos/themeDto.js';
+import { ThemeDTO, ThemeUpdateParams } from '../dtos/themeDto.js';
 import { ThemeService } from '../services/themeService.js';
 
 @Route('themes')
@@ -60,5 +60,12 @@ export class ThemesController extends Controller {
     @Body() requestBody: Omit<ThemeDTO, 'id'>,
   ): Promise<ThemeDTO> {
     return this.themeService.update(themeId, requestBody);
+  }
+
+  @Put()
+  public async updateAllThemes(
+    @Body() requestBody: ThemeUpdateParams[],
+  ): Promise<ThemeDTO[]> {
+    return this.themeService.updateAll(requestBody);
   }
 }

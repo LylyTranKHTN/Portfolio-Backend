@@ -13,7 +13,6 @@ class ThemeMap {
   }
 
   public static toModel(raw: any): Theme {
-    console.log(Theme.isInitialized());
     return Theme.build({
       name: raw.name,
       title: raw.title,

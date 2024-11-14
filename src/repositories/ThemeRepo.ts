@@ -1,4 +1,4 @@
-import { ThemeDTO } from '../dtos/themeDto.js';
+import { ThemeDTO, ThemeUpdateParams } from '../dtos/themeDto.js';
 import ThemeMap from '../mappers/ThemeMap.js';
 import { Theme } from '../models/theme.model.js';
 import { IThemeRepo } from './IThemeRepo.js';
@@ -30,9 +30,9 @@ class ThemeRepo implements IThemeRepo {
     return ThemeMap.toDTO(theme);
   }
 
-  public async save(t: Theme): Promise<ThemeDTO> {
+  public async save(t: Omit<ThemeDTO, 'id'>): Promise<ThemeDTO> {
     try {
-      const savedTheme: Theme = await t.save();
+      const savedTheme: Theme = await Theme.create({ ...t });
 
       return ThemeMap.toDTO(savedTheme);
     } catch (error) {
@@ -76,6 +76,26 @@ class ThemeRepo implements IThemeRepo {
       console.error(error);
       throw new Error('Failed to save theme');
     }
+  }
+
+  public async updateAll(
+    themeUpdateParams: ThemeUpdateParams[],
+  ): Promise<Theme[]> {
+    const updatedThemes = await Promise.all(
+      themeUpdateParams.map(async (themeUpdateParam) => {
+        const theme = await Theme.findOne({
+          where: { id: themeUpdateParam.id },
+        });
+
+        if (!theme) {
+          throw new Error('Theme not found');
+        }
+
+        return this.put(theme);
+      }),
+    );
+
+    return updatedThemes;
   }
 }
 
