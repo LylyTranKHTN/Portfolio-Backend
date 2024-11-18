@@ -48,7 +48,7 @@ app.use(
 
 // error handler
 app.use(function (
-  err: unknown, // eslint-disable-line @typescript-eslint/no-explicit-any
+  err: unknown,
   req: ExRequest,
   res: ExResponse,
   next: NextFunction,

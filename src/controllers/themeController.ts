@@ -14,7 +14,7 @@ import { ThemeService } from '../services/themeService.js';
 
 @Route('themes')
 export class ThemesController extends Controller {
-  private themeService: ThemeService;
+  private readonly themeService: ThemeService;
 
   constructor() {
     super();
@@ -63,7 +63,7 @@ export class ThemesController extends Controller {
   }
 
   @Put()
-  public async updateAllThemes(
+  public async updateThemes(
     @Body() requestBody: ThemeUpdateParams[],
   ): Promise<ThemeDTO[]> {
     return this.themeService.updateAll(requestBody);

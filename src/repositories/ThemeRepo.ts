@@ -71,7 +71,7 @@ class ThemeRepo implements IThemeRepo {
 
   public async put(t: Theme): Promise<Theme> {
     try {
-      return t.save();
+      return await t.save();
     } catch (error) {
       console.error(error);
       throw new Error('Failed to save theme');
@@ -90,6 +90,8 @@ class ThemeRepo implements IThemeRepo {
         if (!theme) {
           throw new Error('Theme not found');
         }
+
+        theme.value = themeUpdateParam.value;
 
         return this.put(theme);
       }),

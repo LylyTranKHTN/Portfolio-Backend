@@ -7,7 +7,7 @@ import ThemeRepo from '../repositories/ThemeRepo.js';
 export type ThemeCreationParams = Omit<Theme, 'id'>;
 
 export class ThemeService {
-  private themeRepo: IThemeRepo;
+  private readonly themeRepo: IThemeRepo;
 
   public constructor() {
     this.themeRepo = new ThemeRepo();
@@ -32,8 +32,8 @@ export class ThemeService {
         ThemeMap.toModel(themeCreationParams),
       );
       return newTheme;
-    } catch (error) {
-      throw new Error('Failed to save theme');
+    } catch (error: any) {
+      throw new Error('Failed to save theme', error);
     }
   }
 
