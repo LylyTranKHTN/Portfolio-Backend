@@ -1,5 +1,4 @@
-import { ThemeDTO, ThemeUpdateParams } from '../dtos/themeDto.js';
-import ThemeMap from '../mappers/ThemeMap.js';
+import { ThemeUpdateParams } from '../dtos/themeDto.js';
 import { Theme } from '../models/theme.model.js';
 import { IThemeRepo } from './IThemeRepo.js';
 
@@ -15,7 +14,7 @@ class ThemeRepo implements IThemeRepo {
     return !!theme;
   }
 
-  public async get(id: string): Promise<ThemeDTO | null> {
+  public async get(id: string): Promise<Theme | null> {
     let theme: Theme | null = null;
     try {
       theme = await Theme.findOne({ where: { id } });
@@ -27,14 +26,24 @@ class ThemeRepo implements IThemeRepo {
       return null;
     }
 
-    return ThemeMap.toDTO(theme);
+    return theme;
   }
 
-  public async save(t: Omit<ThemeDTO, 'id'>): Promise<ThemeDTO> {
+  public async create(t: Omit<Theme, 'id'>): Promise<Theme> {
     try {
       const savedTheme: Theme = await Theme.create({ ...t });
 
-      return ThemeMap.toDTO(savedTheme);
+      return savedTheme;
+    } catch (error) {
+      console.error(error);
+      throw new Error('Failed to save theme');
+    }
+  }
+
+  public async update(t: Theme): Promise<Theme> {
+    try {
+      t.updatedAt = new Date();
+      return await t.save();
     } catch (error) {
       console.error(error);
       throw new Error('Failed to save theme');
@@ -69,23 +78,12 @@ class ThemeRepo implements IThemeRepo {
     }
   }
 
-  public async put(t: Theme): Promise<Theme> {
-    try {
-      return await t.save();
-    } catch (error) {
-      console.error(error);
-      throw new Error('Failed to save theme');
-    }
-  }
-
   public async updateAll(
     themeUpdateParams: ThemeUpdateParams[],
   ): Promise<Theme[]> {
     const updatedThemes = await Promise.all(
       themeUpdateParams.map(async (themeUpdateParam) => {
-        const theme = await Theme.findOne({
-          where: { id: themeUpdateParam.id },
-        });
+        const theme = await this.get(themeUpdateParam.id);
 
         if (!theme) {
           throw new Error('Theme not found');
@@ -93,7 +91,7 @@ class ThemeRepo implements IThemeRepo {
 
         theme.value = themeUpdateParam.value;
 
-        return this.put(theme);
+        return this.update(theme);
       }),
     );
 

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Example,
   Get,
   Post,
@@ -49,15 +50,14 @@ export class ThemesController extends Controller {
   }
 
   @Put('{themeId}')
-  @Example<Omit<ThemeDTO, 'id'>>({
+  @Example<Partial<ThemeDTO>>({
     name: 'secondary-color',
     title: 'Secondary Color',
     value: 'black',
-    description: 'This is Secondary color',
   })
   public async updateTheme(
     themeId: string,
-    @Body() requestBody: Omit<ThemeDTO, 'id'>,
+    @Body() requestBody: Partial<ThemeDTO>,
   ): Promise<ThemeDTO> {
     return this.themeService.update(themeId, requestBody);
   }
@@ -67,5 +67,10 @@ export class ThemesController extends Controller {
     @Body() requestBody: ThemeUpdateParams[],
   ): Promise<ThemeDTO[]> {
     return this.themeService.updateAll(requestBody);
+  }
+
+  @Delete('{themeId}')
+  public async deleteTheme(themeId: string): Promise<void> {
+    return this.themeService.delete(themeId);
   }
 }

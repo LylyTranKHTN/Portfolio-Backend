@@ -28,7 +28,7 @@ export class ThemeService {
     themeCreationParams: Omit<ThemeDTO, 'id'>,
   ): Promise<ThemeDTO> {
     try {
-      const newTheme: ThemeDTO = await this.themeRepo.save(
+      const newTheme: ThemeDTO = await this.themeRepo.create(
         ThemeMap.toModel(themeCreationParams),
       );
       return newTheme;
@@ -45,16 +45,23 @@ export class ThemeService {
 
   public async update(
     themeId: string,
-    themeCreationParams: Omit<ThemeDTO, 'id'>,
+    themeCreationParams: Partial<ThemeDTO>,
   ): Promise<ThemeDTO> {
-    const theme = await this.themeRepo.get(themeId);
+    let theme = await this.themeRepo.get(themeId);
 
-    const updatedTheme = await this.themeRepo.save({
-      ...theme,
-      ...themeCreationParams,
-    });
+    if (!theme) {
+      throw new Error('Theme not found');
+    }
 
-    return updatedTheme;
+    // upsert theme with new values
+    theme.name = themeCreationParams.name ?? theme.name;
+    theme.title = themeCreationParams.title ?? theme.title;
+    theme.value = themeCreationParams.value ?? theme.value;
+    theme.description = themeCreationParams.description ?? theme.description;
+
+    const savedTheme = await this.themeRepo.update(theme);
+
+    return ThemeMap.toDTO(savedTheme);
   }
 
   public async updateAll(
@@ -62,5 +69,15 @@ export class ThemeService {
   ): Promise<ThemeDTO[]> {
     const updatedList = await this.themeRepo.updateAll(themeUpdateParams);
     return updatedList.map((theme) => ThemeMap.toDTO(theme));
+  }
+
+  public async delete(themeId: string): Promise<void> {
+    const theme = await this.themeRepo.get(themeId);
+
+    if (!theme) {
+      throw new Error('Theme not found');
+    }
+
+    await this.themeRepo.delete(theme);
   }
 }
