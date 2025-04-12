@@ -31,7 +31,9 @@ class ThemeRepo implements IThemeRepo {
 
   public async create(t: Omit<Theme, 'id'>): Promise<Theme> {
     try {
-      const savedTheme: Theme = await Theme.create({ ...t });
+      const savedTheme: Theme = await Theme.create({
+        ...t.get(),
+      });
 
       return savedTheme;
     } catch (error) {

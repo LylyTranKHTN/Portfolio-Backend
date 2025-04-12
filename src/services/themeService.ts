@@ -28,9 +28,9 @@ export class ThemeService {
     themeCreationParams: Omit<ThemeDTO, 'id'>,
   ): Promise<ThemeDTO> {
     try {
-      const newTheme: ThemeDTO = await this.themeRepo.create(
-        ThemeMap.toModel(themeCreationParams),
-      );
+      const themModel = ThemeMap.toModel(themeCreationParams);
+      const newTheme: ThemeDTO = await this.themeRepo.create(themModel);
+
       return newTheme;
     } catch (error: any) {
       throw new Error('Failed to save theme', error);
@@ -47,7 +47,7 @@ export class ThemeService {
     themeId: string,
     themeCreationParams: Partial<ThemeDTO>,
   ): Promise<ThemeDTO> {
-    let theme = await this.themeRepo.get(themeId);
+    const theme = await this.themeRepo.get(themeId);
 
     if (!theme) {
       throw new Error('Theme not found');
